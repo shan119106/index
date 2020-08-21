@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>canvas</title>
+  <style >
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    canvas{
+      border:2px solid black;
+    }
+        #sidebar{
+        border:1px solid black;
+    height:300px;
+        width:100px;
+         position:absolute;
+         left:90%;
+         top:10%;
+    padding:20px 10px;
+        }
+        #bar{
+    border:1px solid black;
+    height:100px;
+        width:300px;
+        position:absolute;
+        top:80%;
+        left:35%;
+    padding:20px 10px;
+}
+ #pen{
+    border:1px solid black;
+    height:40px;
+        width:40px;
+        background:black;
+        
+  }
+  #eraser{
+    border:1px solid black;
+    height:40px;
+        width:40px;
+       background:#ffffff;
+       
+        
+  }
+  #blue{
+  border:1px solid black;
+    height:40px;
+        width:40px;
+       
+        background:#0000e6;
+      }
+#green{
+        border:1px solid black;
+    height:40px;
+        width:40px;
+       
+        background:#33cc33;
+        }
+  #red{
+     border:1px solid black;
+    height:40px;
+        width:40px;
+       
+        background:#ff3300;
+  }
+  #yellow{
+   border:1px solid black;
+    height:40px;
+        width:40px;
+       
+        background:#ffd11a;
+        }
+       ul{
+       list-style-type: none;
+       display:flex;
+       padding-left:5px;
+       }
+       li{
+       padding-left:10px;
+       border-spacing:10px;
+       margin-left:10px;
+       border:1px solid black;
+    height:40px;
+        width:40px;
+        margin-top:10px;
+       
+       }
+       #shape{
+        list-style-type: none;
+        display:block;
+        }
+        .rectangle{
+        width:30px;
+        height:20px;
+        border:1px solid black;
+        transform:translate(-20%,30%);
+        }
+        center{
+        position:absolute;
+        transform:translate(-15%,10%);
+        }
+       
+  </style>
+<script >
+
+function start(){
+var canvas=document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var painting=false;
+var rect=0;
+var line=0;
+var circle=0;
+var x=0;
+var y=0;
+var width=0;
+var height=0;
+function startPosition(e){
+  
+    if(rect===1){
+    ctx.beginPath();
+    ctx.moveTo(e.clientX,e.clientY);
+    x=e.clientX;
+    y=e.clientY;
+    }
+    else if(circle===1){
+    ctx.beginPath();
+    
+    x=e.clientX;
+    y=e.clientY;
+    }
+    else{
+    painting=true;
+    ctx.beginPath();
+    
+    draw(e);
+    }
+}
+function finishPosition(e){
+  if(rect===1){
+    ctx.lineWidth=5;
+    var width=Math.abs(e.clientX-x);
+     var height=Math.abs(e.clientY-y);
+     ctx.strokeRect(x,y,width,height);
+     ctx.closePath();
+    }
+    else if(circle===1){
+    ctx.lineWidth=5;
+    var width=(e.clientX+x)/2;
+     var height=(e.clientY+y)/2;
+    var deltaX = Math.abs(x- e.clientX);
+    var deltaY = Math.abs(y- e.clientY);
+    var dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))/2;
+   
+    ctx.arc(width, height, dist, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.closePath();
+    }
+    else{
+  painting=false;
+    
+    ctx.beginPath();
+    }
+}
+function draw(e){
+if(!(painting)){
+return;
+}
+ctx.lineWidth=8;
+ctx.lineCap="round";
+ctx.lineTo(e.clientX,e.clientY);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(e.clientX,e.clientY);
+}
+function pen(){
+
+ctx.strokeStyle="#000000";
+
+}
+function erase(){
+ctx.lineWidth=40;
+ctx.strokeStyle="#ffffff";
+}
+document.getElementById("pen").addEventListener("click",pen);
+document.getElementById("eraser").addEventListener("click",erase);
+document.getElementById("blue").addEventListener("click",function(){
+ ctx.strokeStyle="#0000e6";});
+document.getElementById("green").addEventListener("click",function(){
+ ctx.strokeStyle="#33cc33";});
+ document.getElementById("red").addEventListener("click",function(){
+ ctx.strokeStyle="#ff3300";});
+ document.getElementById("yellow").addEventListener("click",function(){
+ ctx.strokeStyle="#ffd11a";});
+ document.getElementById("rectangle").addEventListener("click",function(){
+ rect=1;});
+ document.getElementById("pointer").addEventListener("click",function(){
+rect=0;
+circle=0;});
+document.getElementById("rectangle").addEventListener("click",function(){
+ rect=1;
+ circle=0;});
+ document.getElementById("circle").addEventListener("click",function(){
+circle=1;
+rect=0;});
+canvas.addEventListener('mousedown',startPosition);
+canvas.addEventListener('mouseup',finishPosition);
+canvas.addEventListener('mousemove',draw);
+
+}
+</script>
+</head>
+<body onload="start()">
+<canvas id="canvas" height ="744" width="1544"></canvas>
+<div id="sidebar">
+<ul id="shape">
+  <li id="pointer" type="button" class="shape">
+    <i class="fa fa-mouse-pointer" style="font-size:24px"></i>
+  </li>
+   
+  <li id="rectangle" type="button" class="shape">
+    <center class="rectangle" ></center>
+  </li>
+    <li id="circle" type="button" class="shape">
+    <center><i class="fa fa-circle-o" style="font-size:30px;transfrom: "></i></center>
+  </li>
+    
+    </ul>
+</div>
+<div id="bar">
+<ul>
+  <li id="pen" type="button">
+    
+  </li>
+   
+  <li id="eraser" type="button">
+    
+  </li>
+    <li id="blue" type="button">
+    
+  </li>
+     <li id="green" type="button">
+    
+  </li>
+     <li id="red" type="button">
+    
+  </li>
+     <li id="yellow" type="button">
+    
+  </li>
+    </ul>
+</div>
+
+</body>
+</html>
